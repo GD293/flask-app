@@ -19,7 +19,14 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}
 
       - name: Build Docker image
-        run: docker build -t ${{ secrets.DOCKER_USERNAME }}/portfolio-project:latest .
+        run: |
+          IMAGE_NAME=gdefe/flask-app
+          VERSION=${GITHUB_SHA::7}   # short commit SHA
+          docker build -t $IMAGE_NAME:$VERSION -t $IMAGE_NAME:latest .
 
       - name: Push Docker image
-        run: docker push ${{ secrets.DOCKER_USERNAME }}/portfolio-project:latest
+        run: |
+          IMAGE_NAME=gdefe/flask-app
+          VERSION=${GITHUB_SHA::7}
+          docker push $IMAGE_NAME:$VERSION
+          docker push $IMAGE_NAME:latest
